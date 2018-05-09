@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">Sensor Signals</string>
+    <string name="hello">Welcome to Zephyr BioHarness Appworld !</string>
+    <string name="HeartRate">Heart Rate</string>
+    <string name="RespRate">Respiration Rate</string>
+    <string name="SkinTemp">Skin Temperature</string>
+    <string name="Posture">Posture</string>
+    <string name="PeakAcc">Peak Acceleration</string>
+    <string name="StatusMsg"/>
+    <string name="Connect">Connect</string>
+    <string name="Disconnect">Disconnect</string>
+    <string name="init_value">000</string>
+    <string name="status_message">Status Message</string>
+    <string name="message_box">Status Message Box</string>
+    <string name="R2Rtext">R to R interval</string>
+    <string name="ECGtext">ECG</string>
+    <string name="action_settings">lkhjkl</string>
+    <string name="Rmssd">HRV</string>
+    <string name="NewRMSSDtext">NewRMSSD</string>
+    <string name="BWFtext">Breathing waveform</string>
+    <string name="ZTtext">Zephyr time</string>
+    <string name="quit">Quit</string>
+</resources>
