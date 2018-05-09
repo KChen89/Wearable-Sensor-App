@@ -37,8 +37,8 @@ public class MyConnectedListener extends ConnectListenerImpl{
     private SummaryPacketInfo SummaryInfoPacket = new SummaryPacketInfo();
 
     private PacketTypeRequest RqPacketType = new PacketTypeRequest();
-    public MyConnectedListener(Handler handler,Handler _NewHandler) {
-        super(handler, null);
+    public MyConnectedListener(Handler _NewHandler) {
+        super(_NewHandler, null);
         _aNewHandler = _NewHandler;
         // TODO Auto-generated constructor stub
     }

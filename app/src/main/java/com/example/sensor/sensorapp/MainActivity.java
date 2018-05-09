@@ -1,3 +1,4 @@
+// @author: Kemeng Chen: kemengchen@email.arizona.edu
 package com.example.sensor.sensorapp;
 
 import android.app.Activity;
@@ -91,13 +92,13 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        /*Sending a message to android that we are going to initiate a pairing request*/
-        IntentFilter filter = new IntentFilter("android.bluetooth.device.action.PAIRING_REQUEST");
-        /*Registering a new BTBroadcast receiver from the Main Activity context with pairing request event*/
-        this.getApplicationContext().registerReceiver(new BTBroadcastReceiver(), filter);
-        // Registering the BTBondReceiver in the application that the status of the receiver has changed to Paired
-        IntentFilter filter2 = new IntentFilter("android.bluetooth.device.action.BOND_STATE_CHANGED");
-        this.getApplicationContext().registerReceiver(new BTBondReceiver(), filter2);
+//        /*Sending a message to android that we are going to initiate a pairing request*/
+//        IntentFilter filter = new IntentFilter("android.bluetooth.device.action.PAIRING_REQUEST");
+//        /*Registering a new BTBroadcast receiver from the Main Activity context with pairing request event*/
+//        this.getApplicationContext().registerReceiver(new BTBroadcastReceiver(), filter);
+//        // Registering the BTBondReceiver in the application that the status of the receiver has changed to Paired
+//        IntentFilter filter2 = new IntentFilter("android.bluetooth.device.action.BOND_STATE_CHANGED");
+//        this.getApplicationContext().registerReceiver(new BTBondReceiver(), filter2);
         myContext = this.getApplicationContext();
         parameterSetting();
         btListener();
@@ -112,10 +113,10 @@ public class MainActivity extends Activity {
         actPlot = (XYPlot) findViewById(R.id.ActPlot);
 
         ecgSeries = new SimpleXYSeries("ECG");
-        rrSeries = new SimpleXYSeries("RR intervals");
+        rrSeries = new SimpleXYSeries("R to R");
         respSeries = new SimpleXYSeries("Respiration waveform");
         hrvSeries = new SimpleXYSeries("Heart Rate Variability");
-        actSeries = new SimpleXYSeries("Activity level");
+        actSeries = new SimpleXYSeries("Activity");
 
         ecgSeries.useImplicitXVals();
         rrSeries.useImplicitXVals();
@@ -274,7 +275,7 @@ public class MainActivity extends Activity {
                     BluetoothDevice Device = adapter.getRemoteDevice(BhMacID);
                     String DeviceName = Device.getName();
                     _bt = new BTClient(adapter, BhMacID);
-                    _NConnListener = new MyConnectedListener(Newhandler,Newhandler);
+                    _NConnListener = new MyConnectedListener(Signalhandler);
                     _bt.addConnectedEventListener(_NConnListener);
                     if(_bt.IsConnected()) {
                         _bt.start();
@@ -376,10 +377,12 @@ public class MainActivity extends Activity {
             }
         }
 //        if(btThread!=null){
-//            try {
+//            if(btThread.isAlive()){
+//              try {
 //                btThread.join();
-//            } catch (InterruptedException e) {
+//              } catch (InterruptedException e) {
 //                e.printStackTrace();
+//              }
 //            }
 //        }
         MainActivity.this.finish();
@@ -429,7 +432,7 @@ public class MainActivity extends Activity {
         }
     }
 
-    static Handler Newhandler = new Handler(){
+    static Handler Signalhandler = new Handler(){
 
         @Override
         public void handleMessage(Message msg)
