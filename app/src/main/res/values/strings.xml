@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Plotting Sensor Signals (K.C.陳)</string>
+    <string name="app_name">Heart Monitoring 心电监控 (K.C.) </string>
     <string name="hello">Hello World!</string>
     <string name="HeartRate">Heart Rate</string>
     <string name="RespRate">Respiration Rate</string>

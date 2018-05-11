@@ -59,8 +59,8 @@ public class MainActivity extends AppCompatActivity {
     private final String initId = "00:07:80:9D:8A:E8" ;
     private Thread btThread;
 
-    private static final int ECG_PLOT_LENGTH = 1200;
-    private static final int RR_PLOT_LENGTH = 20;
+    private static final int ECG_PLOT_LENGTH = 2000;
+    private static final int RR_PLOT_LENGTH = 12;
     private static final int RESPW_PLOT_LENGTH = 360;
     private static final int HRV_PLOT_LENGTH = 15;
     private static final int ACT_PLOT_LENGTH = 10;
@@ -94,6 +94,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         myContext = this.getApplicationContext();
+//        getSupportActionBar().setDisplayShowHomeEnabled(true);
+//        getSupportActionBar().setIcon(R.drawable.icon);
         parameterSetting();
         btListener();
     }
@@ -210,26 +212,16 @@ public class MainActivity extends AppCompatActivity {
                 nameItems[i] = nameList.get(i);
             }
             builder.setTitle("Please choose device");
-            builder.setSingleChoiceItems(nameItems, -1, new DialogInterface.OnClickListener(){
-               @Override
-               public void onClick(DialogInterface btDig, int i) {
-                   String DeviceName=nameItems[i];
-                   btConnect(DeviceName);
-                   btDig.dismiss();
-               }
+            builder.setSingleChoiceItems(nameItems, -1, null);
+            builder.setPositiveButton("Connect", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface btDig, int i) {
+                    int sp=((AlertDialog) btDig).getListView().getCheckedItemPosition();
+                    String DeviceName=nameItems[sp];
+                    btConnect(DeviceName);
+                    btDig.dismiss();
+                }
             });
-//            final ChoiceOnClickListener choiceListener = new ChoiceOnClickListener() ;
-//            builder.setSingleChoiceItems(nameItems, 0, choiceListener);
-//            builder.setPositiveButton("Connect", new DialogInterface.OnClickListener() {
-//                @Override
-//                public void onClick(DialogInterface btDig, int which) {
-//                    int choicewhich = choiceListener.getWhich();
-//                    String DeviceName = nameItems[choicewhich];
-//                    btConnect(DeviceName);
-//                    btDig.dismiss();
-//                }
-//
-//            });
         }
         builder.create().show();
     }
