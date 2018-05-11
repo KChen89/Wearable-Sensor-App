@@ -1,7 +1,6 @@
 // @author: Kemeng Chen: kemengchen@email.arizona.edu
 package com.example.sensor.sensorapp;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -28,17 +27,19 @@ import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
 
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.Gravity;
-import android.view.KeyEvent;
 
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.*;
 
 import zephyr.android.BioHarnessBT.*;
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
+
     /** Called when the activity is first created. */
     BluetoothAdapter adapter = null;
     BTClient _bt;
@@ -58,10 +59,10 @@ public class MainActivity extends Activity {
     private final String initId = "00:07:80:9D:8A:E8" ;
     private Thread btThread;
 
-    private static final int ECG_PLOT_LENGTH = 500;
-    private static final int RR_PLOT_LENGTH = 10;
-    private static final int RESPW_PLOT_LENGTH = 300;
-    private static final int HRV_PLOT_LENGTH = 10;
+    private static final int ECG_PLOT_LENGTH = 1200;
+    private static final int RR_PLOT_LENGTH = 20;
+    private static final int RESPW_PLOT_LENGTH = 360;
+    private static final int HRV_PLOT_LENGTH = 15;
     private static final int ACT_PLOT_LENGTH = 10;
 
     private static XYPlot ecgPlot = null;
@@ -92,13 +93,6 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        /*Sending a message to android that we are going to initiate a pairing request*/
-//        IntentFilter filter = new IntentFilter("android.bluetooth.device.action.PAIRING_REQUEST");
-//        /*Registering a new BTBroadcast receiver from the Main Activity context with pairing request event*/
-//        this.getApplicationContext().registerReceiver(new BTBroadcastReceiver(), filter);
-//        // Registering the BTBondReceiver in the application that the status of the receiver has changed to Paired
-//        IntentFilter filter2 = new IntentFilter("android.bluetooth.device.action.BOND_STATE_CHANGED");
-//        this.getApplicationContext().registerReceiver(new BTBondReceiver(), filter2);
         myContext = this.getApplicationContext();
         parameterSetting();
         btListener();
@@ -108,51 +102,51 @@ public class MainActivity extends Activity {
         // TODO Auto-generated method stub
         ecgPlot =  (XYPlot) findViewById(R.id.ECGPlot);
         rrPlot = (XYPlot) findViewById(R.id.RRpeakPlot);
-        respPlot = (XYPlot) findViewById(R.id.RespPlot);
-        hrvPlot = (XYPlot) findViewById(R.id.HRVPlot);
-        actPlot = (XYPlot) findViewById(R.id.ActPlot);
+//        respPlot = (XYPlot) findViewById(R.id.RespPlot);
+//        hrvPlot = (XYPlot) findViewById(R.id.HRVPlot);
+//        actPlot = (XYPlot) findViewById(R.id.ActPlot);
 
         ecgSeries = new SimpleXYSeries("ECG");
-        rrSeries = new SimpleXYSeries("R to R");
-        respSeries = new SimpleXYSeries("Respiration waveform");
-        hrvSeries = new SimpleXYSeries("Heart Rate Variability");
-        actSeries = new SimpleXYSeries("Activity");
+        rrSeries = new SimpleXYSeries("Heart Rate");
+//        respSeries = new SimpleXYSeries("Respiration waveform");
+//        hrvSeries = new SimpleXYSeries("Heart Rate Variability");
+//        actSeries = new SimpleXYSeries("Activity");
 
         ecgSeries.useImplicitXVals();
         rrSeries.useImplicitXVals();
-        respSeries.useImplicitXVals();
-        hrvSeries.useImplicitXVals();
-        actSeries.useImplicitXVals();
+//        respSeries.useImplicitXVals();
+//        hrvSeries.useImplicitXVals();
+//        actSeries.useImplicitXVals();
 
         ecgPlot.setRangeBoundaries(-3, 12, BoundaryMode.AUTO);
-        rrPlot.setRangeBoundaries(200,1000, BoundaryMode.AUTO);
-        respPlot.setRangeBoundaries(-8, 8, BoundaryMode.AUTO);
-        hrvPlot.setRangeBoundaries(0, 500, BoundaryMode.AUTO);
-        actPlot.setRangeBoundaries(-1, 3, BoundaryMode.FIXED);
+        rrPlot.setRangeBoundaries(0,250, BoundaryMode.AUTO);
+//        respPlot.setRangeBoundaries(-10, 10, BoundaryMode.AUTO);
+//        hrvPlot.setRangeBoundaries(0, 500, BoundaryMode.AUTO);
+//        actPlot.setRangeBoundaries(-1, 3, BoundaryMode.FIXED);
 
         ecgPlot.setDomainBoundaries(0, ECG_PLOT_LENGTH, BoundaryMode.FIXED);
         rrPlot.setDomainBoundaries(0, RR_PLOT_LENGTH, BoundaryMode.FIXED);
-        respPlot.setDomainBoundaries(0, RESPW_PLOT_LENGTH, BoundaryMode.FIXED);
-        hrvPlot.setDomainBoundaries(0,HRV_PLOT_LENGTH, BoundaryMode.FIXED);
-        actPlot.setDomainBoundaries(0, ACT_PLOT_LENGTH, BoundaryMode.FIXED);
+//        respPlot.setDomainBoundaries(0, RESPW_PLOT_LENGTH, BoundaryMode.FIXED);
+//        hrvPlot.setDomainBoundaries(0,HRV_PLOT_LENGTH, BoundaryMode.FIXED);
+//        actPlot.setDomainBoundaries(0, ACT_PLOT_LENGTH, BoundaryMode.FIXED);
 
         ecgPlot.addSeries(ecgSeries, new LineAndPointFormatter(Color.RED, null, null, null));
         rrPlot.addSeries(rrSeries, new LineAndPointFormatter(Color.rgb(250, 250, 250), Color.MAGENTA, null, null));
-        respPlot.addSeries(respSeries, new LineAndPointFormatter(Color.GREEN, null, null, null));
-        hrvPlot.addSeries(hrvSeries, new LineAndPointFormatter(Color.rgb(250,  250,  250), Color.BLUE, null, null));
-        actPlot.addSeries(actSeries, new LineAndPointFormatter(Color.rgb(250,  250,  250), Color.YELLOW, null, null));
+//        respPlot.addSeries(respSeries, new LineAndPointFormatter(Color.GREEN, null, null, null));
+//        hrvPlot.addSeries(hrvSeries, new LineAndPointFormatter(Color.rgb(250,  250,  250), Color.BLUE, null, null));
+//        actPlot.addSeries(actSeries, new LineAndPointFormatter(Color.rgb(250,  250,  250), Color.YELLOW, null, null));
 
         ecgPlot.setDomainStepValue(5);
         rrPlot.setDomainStepValue(5);
-        respPlot.setDomainStepValue(5);
-        hrvPlot.setDomainStepValue(5);
-        actPlot.setDomainStepValue(5);
+//        respPlot.setDomainStepValue(5);
+//        hrvPlot.setDomainStepValue(5);
+//        actPlot.setDomainStepValue(5);
 
         ecgPlot.setTicksPerRangeLabel(3);
         rrPlot.setTicksPerRangeLabel(3);
-        respPlot.setTicksPerRangeLabel(3);
-        hrvPlot.setTicksPerRangeLabel(3);
-        actPlot.setTicksPerRangeLabel(3);
+//        respPlot.setTicksPerRangeLabel(3);
+//        hrvPlot.setTicksPerRangeLabel(3);
+//        actPlot.setTicksPerRangeLabel(3);
     }
 
     private void btListener() {
@@ -353,17 +347,28 @@ public class MainActivity extends Activity {
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        super.onCreateOptionsMenu(menu);
+        return true;
+    }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event){
-        if(keyCode == KeyEvent.KEYCODE_BACK){
-//            onDestroy();
-            return true;
-        }
-        else{
-            return false;
-        }
+    public void onBackPressed(){
+        super.onBackPressed();
     }
+//    @Override
+//    public boolean onKeyDown(int keyCode, KeyEvent event){
+//        if(keyCode == KeyEvent.KEYCODE_BACK){
+////            onDestroy();
+//            return super.onKeyDown(keyCode, event);
+//            return true;
+//        }
+//        else{
+//            return false;
+//        }
+//    }
 
     protected void onDestroy() {
         super.onDestroy();
@@ -388,7 +393,6 @@ public class MainActivity extends Activity {
         MainActivity.this.finish();
         System.exit(0);
     }
-
 
     private class BTBondReceiver extends BroadcastReceiver {
         @Override
@@ -442,34 +446,39 @@ public class MainActivity extends Activity {
                 case HEART_RATE:
                     String heartRate = msg.getData().getString("HeartRate");
                     Double heartRateV = Double.parseDouble(heartRate);
+                    if(rrSeries.size()>RR_PLOT_LENGTH){
+                        rrSeries.removeFirst();
+                    }
+                    rrSeries.addLast(null, heartRateV);
+                    rrPlot.redraw();
                     break;
 
                 case RESPIRATION_RATE:
                     String respRate = msg.getData().getString("RespirationRate");
                     break;
                 case R_to_R_PACKET:
-                    ArrayList<Integer> R2RText = new ArrayList<Integer>();
+                    ArrayList<Integer> R2RText; // = new ArrayList<Integer>();
                     R2RText= msg.getData().getIntegerArrayList("RtoRText");
-                    if(!R2RText.isEmpty()){
-                        int dataSize = R2RText.size();
-                        for(int i=0;i<dataSize;i++){
-                            if(rrSeries.size() > RR_PLOT_LENGTH){
-                                rrSeries.removeFirst();
-                            }
-                            rrSeries.addLast(null, R2RText.get(i));
-                            rrPlot.redraw();
-                        }
-                    }
+//                    if(!R2RText.isEmpty()){
+//                        int dataSize = R2RText.size();
+//                        for(int i=0;i<dataSize;i++){
+//                            if(rrSeries.size() > RR_PLOT_LENGTH){
+//                                rrSeries.removeFirst();
+//                            }
+//                            rrSeries.addLast(null, 1000.0/R2RText.get(i));
+//                            rrPlot.redraw();
+//                        }
+//                    }
                     break;
 
                 case NewRmssd_PACKET:
                     String NewRMSSDText = msg.getData().getString("NewRMSSD_Text");
-                    int RMSSD = Integer.parseInt(NewRMSSDText);
-                    if(hrvSeries.size() > HRV_PLOT_LENGTH){
-                        hrvSeries.removeFirst();
-                    }
-                    hrvSeries.addLast(null, RMSSD);
-                    hrvPlot.redraw();
+//                    int RMSSD = Integer.parseInt(NewRMSSDText);
+//                    if(hrvSeries.size() > HRV_PLOT_LENGTH){
+//                        hrvSeries.removeFirst();
+//                    }
+//                    hrvSeries.addLast(null, RMSSD);
+//                    hrvPlot.redraw();
                     break;
 
                 case ZT:
@@ -477,21 +486,19 @@ public class MainActivity extends Activity {
                     break;
 
                 case BREATHING_WAVEFORM:
-                    short ampBW[] = msg.getData().getShortArray("brWaveform");
-                    if(ampBW == null){
-                        System.out.println("ampBW is empty");
-                    }
-                    else{
-                        for(int i=0;i<17;i++){
-                            if(respSeries.size() > RESPW_PLOT_LENGTH){
-                                respSeries.removeFirst();
-                            }
-                            respSeries.addLast(null, ampBW[i]-512);
-                            respPlot.redraw();
-                        }
-                    }
-
-
+//                    short ampBW[] = msg.getData().getShortArray("brWaveform");
+//                    if(ampBW == null){
+//                        System.out.println("ampBW is empty");
+//                    }
+//                    else{
+//                        for(int i=0;i<17;i++){
+//                            if(respSeries.size() > RESPW_PLOT_LENGTH){
+//                                respSeries.removeFirst();
+//                            }
+//                            respSeries.addLast(null, ampBW[i]-512);
+//                            respPlot.redraw();
+//                        }
+//                    }
                     break;
 
                 case ECG_PACKET:
