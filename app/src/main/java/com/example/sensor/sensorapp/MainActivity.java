@@ -517,11 +517,11 @@ public class MainActivity extends AppCompatActivity {
                 case SUMMARY_PACKET:
                     String ActivityText = msg.getData().getString("Activity");
                     double Activity = Double.parseDouble(ActivityText);
-                    if(actSeries.size() > ACT_PLOT_LENGTH){
-                        actSeries.removeFirst();
-                    }
-                    actSeries.addLast(null, Activity);
-                    actPlot.redraw();
+//                    if(actSeries.size() > ACT_PLOT_LENGTH){
+//                        actSeries.removeFirst();
+//                    }
+//                    actSeries.addLast(null, Activity);
+//                    actPlot.redraw();
                     break;
 
                 default: break;
