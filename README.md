@@ -1,5 +1,5 @@
 # Wearable-Sensor-App
-Plot wearable sensor signals on Android phone at real time. 
+Plot signals from Biopatch on Android phone at real time. 
 
 ![Plot signals at real time](screenshots/signals.png)
 ![Select sensor device](screenshots/device.png)
