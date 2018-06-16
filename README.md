@@ -1,5 +1,5 @@
 # Wearable-Sensor-App
-Plot signals from Biopatch on Android phone at real time. This is also the data transmission part of stress management App in [1].
+Plot signals from Biopatch on Android phone at real time. This App provides the data transmission and verification for the stress management App in [1].
 
 ![Plot signals at real time](screenshots/signals.png)
 ![Select sensor device](screenshots/device.png)
